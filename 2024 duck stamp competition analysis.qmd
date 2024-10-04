@@ -1,0 +1,61 @@
+---
+title: "Untitled"
+format: html
+embed-resources: true
+---
+
+# 2024 Federal Duck Stamp Competition: An Analysis
+
+```{r}
+#| echo: false
+#| output: false
+
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+
+ducks <- read_excel("2024 Duck Stamp Contest.xlsx")
+```
+
+## Which species were most popular among artists?
+
+```{r}
+#| echo: false
+
+ducks |>
+  filter(Species %in% c("hooded merganser", "northern shoveler", "spectacled eider", "brant", "greater scaup")) |>
+  group_by(Species) |>
+  summarize(
+    count = n(),
+    percent = (n() / 239) * 100) |>
+  arrange(desc(count))
+  
+
+```
+The hooded merganser was by far the most common choice for artists to depict, accounting for nearly half of all entries.
+
+## Which species were most popular with the judges?
+
+### Round 1:
+
+```{r}
+#| echo: false
+
+ducks |>
+  rename("totscorer1" = "Total score R1") |>
+  mutate(
+    r1pass = if_else(
+      condition = totscorer1 >= 3,
+      true = 1,
+      false = 0
+    )
+  ) |>
+  filter(Species %in% c("hooded merganser", "northern shoveler", "spectacled eider", "brant", "greater scaup")) |>
+  group_by(Species) |>
+  summarize(
+    meanscore = mean(totscorer1), 
+    passrate = mean(r1pass)) |>
+  arrange(desc(passrate))
+
+```
+Greater scaups were most likely to make it past Round 1, and also received the highest mean scores from judges.
