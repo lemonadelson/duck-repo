@@ -1,11 +1,9 @@
 ---
-title: "Duck Stamp Competition Analysis"
+title: "2024 Federal Duck Stamp Competition: An Analysis"
 format: html
 
 embed-resources: true
 ---
-
-# 2024 Federal Duck Stamp Competition: An Analysis
 
 ```{r}
 #| echo: false
@@ -22,7 +20,7 @@ ducks <- read_excel("2024 Duck Stamp Contest.xlsx")
 
 ```{r}
 #| echo: false
-
+#| output: false
 ducks |>
   filter(Species %in% c("hooded merganser", "northern shoveler", "spectacled eider", "brant", "greater scaup")) |>
   group_by(Species) |>
@@ -34,6 +32,19 @@ ducks |>
 ```
 The hooded merganser was by far the most common choice for artists to depict, accounting for nearly half of all entries.
 
+```{r}
+#| echo: false
+ducks |>
+  filter(Species %in% c("hooded merganser", "northern shoveler", "spectacled eider", "brant", "greater scaup")) |>
+  group_by(Species) |>
+  summarize(
+    count = n()) |>
+  arrange(desc(count)) |>
+  ggplot() +
+  geom_col(aes(x = Species, y = count)) +
+  theme_minimal()
+
+```
 ## Which species were most popular with the judges?
 
 ### Round 1:
